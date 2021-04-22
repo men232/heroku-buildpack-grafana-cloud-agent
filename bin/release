@@ -5,5 +5,5 @@ BUILD_DIR=$1
 cat << EOF
 ---
 default_process_types:
-  web: bin/agent -config.file agent.yml
+  graphana_agent: bin/agent -config.file agent.yml
 EOF
