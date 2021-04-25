@@ -4,6 +4,8 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
+echo $ENV > $ENV_DIR/env_before.txt
+
 export_env_dir() {
   local env_dir=${1:-$ENV_DIR}
   local whitelist_regex=${2:-$'^(GRAPHANA_)'}
@@ -23,6 +25,11 @@ if ! [ -x "$(command -v envsubst)" ]; then
 fi
 
 export_env_dir "$ENV_DIR"
+
+echo $BUILD_DIR > $BUILD_DIR/build_dir.txt
+echo $CACHE_DIR > $BUILD_DIR/cache_dir.txt
+echo $ENV_DIR > $ENV_DIR/env_dir.txt
+echo $ENV > $ENV_DIR/env_after.txt
 
 echo "Substituting envrionment variables."
 envsubst < $BUILD_DIR/graphana-agent-config.yml > $BUILD_DIR/agent.yml
