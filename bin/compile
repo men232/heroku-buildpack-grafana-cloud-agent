@@ -17,18 +17,12 @@ export_env_dir() {
   fi
 }
 
-if [[ -f $CACHE_DIR/agent.yml && cmp -s $BUILD_DIR/graphana-agent-config.yml $CACHE_DIR/agent.yml ]]; then
-  echo "Reusing cached graphana-agent-config.yml."
-  cp -f "$CACHE_DIR/agent.yml" "$BUILD_DIR/agent.yml"
-else
-  if ! [ -x "$(command -v envsubst)" ]; then
-    echo "Installing dependencies."
-    apt install -y gettext
-  fi
-
-  export_env_dir "$ENV_DIR"
-
-  echo "Substituting envrionment variables."
-  envsubst < $BUILD_DIR/graphana-agent-config.yml > $BUILD_DIR/agent.yml
-  cp -f "$BUILD_DIR/agent.yml" "$CACHE_DIR/agent.yml"
+if ! [ -x "$(command -v envsubst)" ]; then
+  echo "Installing dependencies."
+  apt install -y gettext
 fi
+
+export_env_dir "$ENV_DIR"
+
+echo "Substituting envrionment variables."
+envsubst < $BUILD_DIR/graphana-agent-config.yml > $BUILD_DIR/agent.yml
