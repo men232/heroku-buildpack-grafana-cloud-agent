@@ -1,7 +1,21 @@
 #!/bin/sh
 
-BUILD_DIR=$1
-CACHE_DIR=$2
+BUILD_DIR=${1:-}
+CACHE_DIR=${2:-}
+ENV_DIR=${3:-}
+
+export_env_dir() {
+  local env_dir=${1:-$ENV_DIR}
+  local whitelist_regex=${2:-$'^(GRAPHANA_)'}
+  local blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
+  if [ -d "$env_dir" ]; then
+    for e in $(ls $env_dir); do
+      echo "$e" | grep -E "$whitelist_regex" | grep -qvE "$blacklist_regex" &&
+      export $e=$(cat $env_dir/$e)
+      :
+    done
+  fi
+}
 
 if [[ -f $CACHE_DIR/agent.yml && cmp -s $BUILD_DIR/graphana-agent-config.yml $CACHE_DIR/agent.yml ]]; then
   echo "Reusing cached graphana-agent-config.yml."
@@ -11,6 +25,8 @@ else
     echo "Installing dependencies."
     apt install -y gettext
   fi
+
+  export_env_dir "$ENV_DIR"
 
   echo "Substituting envrionment variables."
   envsubst < $BUILD_DIR/graphana-agent-config.yml > $BUILD_DIR/agent.yml
