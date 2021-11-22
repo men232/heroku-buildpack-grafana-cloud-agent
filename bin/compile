@@ -4,32 +4,31 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
-echo $ENV > $ENV_DIR/env_before.txt
-
 export_env_dir() {
-  local env_dir=${1:-$ENV_DIR}
-  local whitelist_regex=${2:-$'^(GRAPHANA_)'}
-  local blacklist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
+  env_dir=$1
+  acceptlist_regex=${2:-''}
+  denylist_regex=${3:-'^(PATH|GIT_DIR|CPATH|CPPATH|LD_PRELOAD|LIBRARY_PATH)$'}
   if [ -d "$env_dir" ]; then
     for e in $(ls $env_dir); do
-      echo "$e" | grep -E "$whitelist_regex" | grep -qvE "$blacklist_regex" &&
-      export $e=$(cat $env_dir/$e)
+      echo "$e" | grep -E "$acceptlist_regex" | grep -qvE "$denylist_regex" &&
+      export "$e=$(cat $env_dir/$e)"
       :
     done
   fi
 }
 
-if ! [ -x "$(command -v envsubst)" ]; then
-  echo "Installing dependencies."
-  apt install -y gettext
-fi
+# if ! [ -x "$(command -v envsubst)" ]; then
+#   echo "-----> Installing dependencies"
+#   apt install -y gettext
+# fi
 
 export_env_dir "$ENV_DIR"
 
-echo $BUILD_DIR > $BUILD_DIR/build_dir.txt
-echo $CACHE_DIR > $BUILD_DIR/cache_dir.txt
-echo $ENV_DIR > $ENV_DIR/env_dir.txt
-echo $ENV > $ENV_DIR/env_after.txt
+# echo "-----> Substituting environment variables"
+# envsubst < $BUILD_DIR/config.yml > $BUILD_DIR/agent.yml
 
-echo "Substituting envrionment variables."
-envsubst < $BUILD_DIR/graphana-agent-config.yml > $BUILD_DIR/agent.yml
+echo "-----> Copying configuration file"
+cp $BUILD_DIR/config/graphana-agent.yml $BUILD_DIR/graphana-agent.yml
+
+# Debugging
+cat $BUILD_DIR/graphana-agent.yml

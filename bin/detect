@@ -9,7 +9,7 @@ else
   exit 1
 fi
 
-if [ -f $BUILD_DIR/graphana-agent-config.yml ]; then
+if [ -f $BUILD_DIR/config/graphana-agent.yml ]; then
   echo "Agent config detected."
 else
   echo "Missing agent config."

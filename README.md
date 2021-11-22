@@ -8,18 +8,18 @@ This is an unofficial Heroku buildpack for
 ### Binary
 Create a bin folder in the root of your repository. Then download whatever
 version of the [Grafana Cloud Agent](https://github.com/grafana/agent) you plan
-on using. The linux binary should be named `agent`.
+on using. The linux binary should be named `grafana-agent`.
 
 ```
 $ mkdir bin
 $ curl -O -L "https://github.com/grafana/agent/releases/download/v0.4.0/agent-linux-amd64.zip"
 $ unzip agent-linux-amd-64.zip
-$ mv agent-linux-amd64 bin/agent
+$ mv agent-linux-amd64 bin/grafana-agent
 $ rm agent-linux-amd-64.zip
 ```
 
 ### Config
-Your config file should be placed into the root as `graphana-agent-config.yml`.
+Your config file should be placed into the root as `config/graphana-agent.yml`.
 
 The buildpack will substitute any environment variables. Example:
 
