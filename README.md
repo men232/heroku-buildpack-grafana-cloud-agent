@@ -6,17 +6,7 @@ This is an unofficial Heroku buildpack for
 ## Usage
 
 ### Binary
-Create a bin folder in the root of your repository. Then download whatever
-version of the [Grafana Cloud Agent](https://github.com/grafana/agent) you plan
-on using. The linux binary should be named `grafana-agent`.
-
-```
-$ mkdir bin
-$ curl -O -L "https://github.com/grafana/agent/releases/latest/download/agent-linux-amd64.zip"
-$ unzip agent-linux-amd64.zip
-$ mv agent-linux-amd64 bin/grafana-agent
-$ rm agent-linux-amd64.zip
-```
+Automaticly downloads most newest binary that will placed in `bin/grafana-agent`
 
 ### Config
 Your config file should be placed into the root as `config/grafana-agent.yml`.
@@ -25,26 +15,33 @@ The buildpack will substitute any environment variables. Example:
 
 ```yaml
 ---
-server:
-  http_listen_port: $PORT
+integrations:
+  prometheus_remote_write:
+    - basic_auth:
+        password: ${GRAFANA_CLOUD_API_KEY}
+        username: ${GRAFANA_CLOUD_USERNAME}
+      url: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom/push
 
 prometheus:
-  wal_directory: "./"
-  global:
-    scrape_interval: 5s
   configs:
-    - name: agent
-      host_filter: false
-      scrape_configs:
-        - job_name: taylor-swift-metrics
-          metrics_path: /metrics
-          scheme: https
-          static_configs:
-            - targets: ['target.taysway.xyz']
+    - name: integrations
       remote_write:
-        - url: https://prom.taysway.xyz/api/prom/push
-          basic_auth:
-            username: $USERNAME
-            password: $PASSWORD
+        - basic_auth:
+            password: ${GRAFANA_CLOUD_API_KEY}
+            username: ${GRAFANA_CLOUD_USERNAME}
+          url: https://prometheus-prod-10-prod-us-central-0.grafana.net/api/prom/push
+      scrape_configs:
+        - job_name: integrations/nodejs
+          honor_labels: true
+          metrics_path: /api/v1/services/metrics
+          static_configs:
+            - targets:
+                - ${APP_DOMAIN}
+  global:
+    scrape_interval: 60s
+  wal_directory: /tmp/grafana-agent-wal
+
+server:
+  http_listen_port: 12345
 ```
 
