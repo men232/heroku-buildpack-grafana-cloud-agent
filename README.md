@@ -19,7 +19,7 @@ $ rm agent-linux-amd64.zip
 ```
 
 ### Config
-Your config file should be placed into the root as `config/graphana-agent.yml`.
+Your config file should be placed into the root as `config/grafana-agent.yml`.
 
 The buildpack will substitute any environment variables. Example:
 

@@ -37,7 +37,7 @@ export_env_dir "$ENV_DIR"
 # envsubst < $BUILD_DIR/config.yml > $BUILD_DIR/agent.yml
 
 echo "-----> Copying configuration file"
-cp $BUILD_DIR/config/graphana-agent.yml $BUILD_DIR/graphana-agent.yml
+cp $BUILD_DIR/config/grafana-agent.yml $BUILD_DIR/grafana-agent.yml
 
 # Debugging
-cat $BUILD_DIR/graphana-agent.yml
+cat $BUILD_DIR/grafana-agent.yml
