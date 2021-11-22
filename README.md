@@ -12,10 +12,10 @@ on using. The linux binary should be named `grafana-agent`.
 
 ```
 $ mkdir bin
-$ curl -O -L "https://github.com/grafana/agent/releases/download/v0.4.0/agent-linux-amd64.zip"
-$ unzip agent-linux-amd-64.zip
+$ curl -O -L "https://github.com/grafana/agent/releases/latest/download/agent-linux-amd64.zip"
+$ unzip agent-linux-amd64.zip
 $ mv agent-linux-amd64 bin/grafana-agent
-$ rm agent-linux-amd-64.zip
+$ rm agent-linux-amd64.zip
 ```
 
 ### Config

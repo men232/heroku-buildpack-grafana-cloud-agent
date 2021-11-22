@@ -17,6 +17,15 @@ export_env_dir() {
   fi
 }
 
+echo "Download grafana agent binary..."
+mkdir bin
+curl -O -L --silent "https://github.com/grafana/agent/releases/latest/download/agent-linux-amd64.zip"
+unzip agent-linux-amd64.zip
+mv agent-linux-amd64 bin/grafana-agent
+rm agent-linux-amd64.zip
+
+echo "Grafana agent binary installed."
+
 # if ! [ -x "$(command -v envsubst)" ]; then
 #   echo "-----> Installing dependencies"
 #   apt install -y gettext
