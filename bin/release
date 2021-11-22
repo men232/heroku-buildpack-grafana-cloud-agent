@@ -1,9 +1,2 @@
 #!/bin/sh
-
-BUILD_DIR=$1
-
-cat << EOF
----
-default_process_types:
-  grafana_agent: bin/grafana-agent -config.file grafana-agent.yml -config.expand-env
-EOF
+echo "--- {}"
