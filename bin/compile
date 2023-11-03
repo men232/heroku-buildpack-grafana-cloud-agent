@@ -21,15 +21,6 @@ header() {
   echo "-----> $*" || true
 }
 
-check_command() {
-    command
-    if [ $? -eq 0 ]; then
-        return 0
-    else
-        return 1
-    fi
-}
-
 export_env_dir() {
   env_dir=$1
   acceptlist_regex=${2:-''}
@@ -50,14 +41,14 @@ export_env_dir "$ENV_DIR"
 
 header "Installing grafana agent"
 
-check_command cp "${CONFIG_FILE_PATH}" "${BUILD_DIR}/grafana-agent.yml"
+cp $CONFIG_FILE_PATH $BUILD_DIR/grafana-agent.yml
 
-if ! [ $? ]; then
+if [ $? -eq 0 ]; then
+	info "Copied ${CONFIG_FILE_PATH} successfully to ${BUILD_DIR}/grafana-agent.yml"
+else
     info "FAILED to copy a ${CONFIG_FILE_PATH}"
     exit 1
 fi
-
-info "Copied ${CONFIG_FILE_PATH} successfully to ${BUILD_DIR}/grafana-agent.yml"
 
 info "Download grafana agent binary..."
 
