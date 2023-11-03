@@ -1,17 +1,4 @@
 #!/usr/bin/env bash
 
-BUILD_DIR=$1
-
-if [[ -z "${APP_ROOT}" ]]; then
-  CONFIG_FILE_PATH=config/grafana-agent.yml
-else
-  CONFIG_FILE_PATH=$BUILD_DIR/$APP_ROOT/config/grafana-agent.yml
-fi
-
-if [ -f $BUILD_DIR/$CONFIG_FILE_PATH ]; then
-  echo "Agent config detected."
-else
-  echo "Missing agent config."
-  echo $CONFIG_FILE_PATH
-  exit 1
-fi
+echo "Multi-procfile"
+exit 0

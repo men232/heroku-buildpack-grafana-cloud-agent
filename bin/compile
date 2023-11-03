@@ -4,6 +4,12 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
+if [[ -z "${APP_ROOT}" ]]; then
+  CONFIG_FILE_PATH=config/grafana-agent.yml
+else
+  CONFIG_FILE_PATH=$BUILD_DIR/$APP_ROOT/config/grafana-agent.yml
+fi
+
 export_env_dir() {
   env_dir=$1
   acceptlist_regex=${2:-''}
@@ -17,6 +23,20 @@ export_env_dir() {
   fi
 }
 
+export_env_dir "$ENV_DIR"
+
+# echo "-----> Substituting environment variables"
+# envsubst < $BUILD_DIR/config.yml > $BUILD_DIR/agent.yml
+
+echo "Copying grafana configuration file"
+
+cp $CONFIG_FILE_PATH "${BUILD_DIR}/grafana-agent.yml"
+
+if ! [ $? ]; then
+    echo "FAILED to copy a ${$CONFIG_FILE_PATH}"
+    exit 1
+fi
+
 echo "Download grafana agent binary..."
 mkdir -p $BUILD_DIR/bin
 curl -O -L --silent "https://github.com/grafana/agent/releases/download/v0.25.1/agent-linux-amd64.zip"
@@ -25,24 +45,6 @@ mv agent-linux-amd64 $BUILD_DIR/bin/grafana-agent
 rm agent-linux-amd64.zip
 
 echo "Grafana agent binary installed."
-
-# if ! [ -x "$(command -v envsubst)" ]; then
-#   echo "-----> Installing dependencies"
-#   apt install -y gettext
-# fi
-
-export_env_dir "$ENV_DIR"
-
-# echo "-----> Substituting environment variables"
-# envsubst < $BUILD_DIR/config.yml > $BUILD_DIR/agent.yml
-
-if [[ -z "${APP_ROOT}" ]]; then
-  echo "-----> Copying configuration file"
-  cp $BUILD_DIR/config/grafana-agent.yml $BUILD_DIR/grafana-agent.yml
-else
-  echo "-----> Copying configuration file from $APP_ROOT/config/grafana-agent.yml"
-  cp $BUILD_DIR/$APP_ROOT/config/grafana-agent.yml $BUILD_DIR/grafana-agent.yml
-fi
 
 # Debugging
 cat $BUILD_DIR/grafana-agent.yml
