@@ -57,7 +57,7 @@ if ! [ $? ]; then
     exit 1
 fi
 
-info "Copied ${CONFIG_FILE_PATH} successfully"
+info "Copied ${CONFIG_FILE_PATH} successfully to ${BUILD_DIR}/grafana-agent.yml"
 
 info "Download grafana agent binary..."
 
