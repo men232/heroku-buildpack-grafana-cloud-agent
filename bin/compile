@@ -52,12 +52,12 @@ header "Installing grafana agent"
 
 check_command cp "${CONFIG_FILE_PATH}" "${BUILD_DIR}/grafana-agent.yml"
 
-if [ $? -eq 0 ]; then
+if ! [ $? ]; then
     info "FAILED to copy a ${CONFIG_FILE_PATH}"
     exit 1
 fi
 
-info "Copied configuration file"
+info "Copied ${CONFIG_FILE_PATH} successfully"
 
 info "Download grafana agent binary..."
 
