@@ -36,8 +36,13 @@ export_env_dir "$ENV_DIR"
 # echo "-----> Substituting environment variables"
 # envsubst < $BUILD_DIR/config.yml > $BUILD_DIR/agent.yml
 
-echo "-----> Copying configuration file"
-cp $BUILD_DIR/config/grafana-agent.yml $BUILD_DIR/grafana-agent.yml
+if [[ -z "${APP_ROOT}" ]]; then
+  echo "-----> Copying configuration file"
+  cp $BUILD_DIR/config/grafana-agent.yml $BUILD_DIR/grafana-agent.yml
+else
+  echo "-----> Copying configuration file from $APP_ROOT/config/grafana-agent.yml"
+  cp $BUILD_DIR/$APP_ROOT/config/grafana-agent.yml $BUILD_DIR/grafana-agent.yml
+fi
 
 # Debugging
 cat $BUILD_DIR/grafana-agent.yml
