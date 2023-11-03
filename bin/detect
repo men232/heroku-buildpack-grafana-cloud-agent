@@ -1,14 +1,12 @@
 #!/bin/sh
 
 BUILD_DIR=$1
-CONFIG_FILE_PATH=config/grafana-agent.yml
 
-# if [ -f $BUILD_DIR/bin/agent ]; then
-#   echo "Agent binary detected."
-# else
-#   echo "Missing agent binary."
-#   exit 1
-# fi
+if [[ -z "${APP_ROOT}" ]]; then
+  CONFIG_FILE_PATH=config/grafana-agent.yml
+else
+  CONFIG_FILE_PATH=$BUILD_DIR/$APP_ROOT/config/grafana-agent.yml
+fi
 
 if [ -f $BUILD_DIR/$CONFIG_FILE_PATH ]; then
   echo "Agent config detected."
