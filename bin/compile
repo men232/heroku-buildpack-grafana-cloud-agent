@@ -4,8 +4,10 @@ BUILD_DIR=${1:-}
 CACHE_DIR=${2:-}
 ENV_DIR=${3:-}
 
+APP_ROOT=$(cat "${ENV_DIR}/APP_ROOT")
+
 if [[ -z "${APP_ROOT}" ]]; then
-  CONFIG_FILE_PATH=config/grafana-agent.yml
+  CONFIG_FILE_PATH="${BUILD_DIR}/config/grafana-agent.yml"
 else
   CONFIG_FILE_PATH="${BUILD_DIR}/${APP_ROOT}/config/grafana-agent.yml"
 fi
